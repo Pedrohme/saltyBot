@@ -1,3 +1,4 @@
+import { throws } from 'assert';
 import pg from 'pg';
 
 const selectFighter = "SELECT * FROM fighter WHERE name = $1";
@@ -10,9 +11,24 @@ export class dbHandler {
 
     constructor(connectionInfo:any) {
         this.dbClient = new pg.Client(connectionInfo);
-        this.dbClient.connect();
     }
+    
+    async connect() {
+        try {
+            await this.dbClient.connect();
+            console.log("database connected!");
 
+            this.dbClient.on('error', err => {
+                console.error('database error!', err.stack);
+            });
+
+            return true;
+        } catch (error) {
+            console.log((<Error>error).stack);
+            return false;
+        }
+    }
+    
     async insertFighter(values:(string|number)[]) {
         try {
             const res = await this.dbClient.query(insertFighter, values);

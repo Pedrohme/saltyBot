@@ -10,8 +10,17 @@ const tmiOptions = {
     channels: ['saltybet']
 };
 
-const pHandler = new dbHandler(dbConnect.postgres);
-const tHandler = new twitchChatHandler(tmiOptions);
+const db = new dbHandler(dbConnect.postgres);
+const twitch = new twitchChatHandler(tmiOptions);
 
-tHandler.startMessageWatcher(pHandler);
+async function main() {
+    const dbConnection = await db.connect();
+    const twitchConnection = await twitch.connect();
+    if (dbConnection && twitchConnection) {
+        console.log("ready to start listening!");
+        twitch.startMessageWatcher(db);
+    }
+}
+
+main();
 
