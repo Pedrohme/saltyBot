@@ -30,7 +30,7 @@ export class twitchChatHandler {
         this.tmiClient.on('message', async (channel, tags, message, self) => {
             if (tags.username === 'waifu4u') {
                 const betsPos = message.indexOf("Bets are OPEN for");
-                const exhibition = message.indexOf("(exhibition)");
+                const exhibition = message.indexOf("(exhibitions)");
                 if (betsPos !== -1 && exhibition === -1) {
                     const sliced = message.slice(betsPos).trim();
                     const vspos = sliced.indexOf('vs');
