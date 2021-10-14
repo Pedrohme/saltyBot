@@ -4,6 +4,10 @@
   "description": "SaltyBet data collector bot",
   "license": "GPL-3.0-or-later",
   "main": "./dist/index.js",
+  "engines": {
+    "node": "16.x",
+    "npm": "7.x"
+  },
   "scripts": {
     "start": "node .",
     "build": "npx tsc",
