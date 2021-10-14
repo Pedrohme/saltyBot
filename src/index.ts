@@ -1,4 +1,3 @@
-import dbConnect from './config/config.json';
 import { twitchChatHandler } from './handlers/twitchChatHandler';
 import { dbHandler } from './handlers/dbHandler';
 
@@ -10,7 +9,13 @@ const tmiOptions = {
     channels: ['saltybet']
 };
 
-const db = new dbHandler(dbConnect.postgres);
+const db = new dbHandler({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+        rejectUnauthorized: false
+    }
+});
+
 const twitch = new twitchChatHandler(tmiOptions);
 
 async function main() {
