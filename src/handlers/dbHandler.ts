@@ -1,4 +1,3 @@
-import { throws } from 'assert';
 import pg from 'pg';
 
 const selectFighter = "SELECT * FROM fighter WHERE name = $1";

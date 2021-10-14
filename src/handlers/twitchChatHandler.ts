@@ -1,4 +1,4 @@
-import tmi, { client } from 'tmi.js';
+import tmi from 'tmi.js';
 import pg from 'pg';
 import {dbHandler} from './dbHandler';
 
