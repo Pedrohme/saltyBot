@@ -1,0 +1,27 @@
+{
+  "name": "saltybot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "npx ts-node ./src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^16.10.8",
+    "@types/pg": "^8.6.1",
+    "@types/tmi.js": "^1.8.0",
+    "@typescript-eslint/eslint-plugin": "^5.0.0",
+    "@typescript-eslint/parser": "^5.0.0",
+    "eslint": "^8.0.0",
+    "ts-node": "^10.3.0",
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "pg": "^8.7.1",
+    "tmi.js": "^1.8.5"
+  }
+}
