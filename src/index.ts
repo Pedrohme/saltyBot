@@ -14,9 +14,8 @@ const db = new dbHandler(dbConnect.postgres);
 const twitch = new twitchChatHandler(tmiOptions);
 
 async function main() {
-    const dbConnection = await db.connect();
     const twitchConnection = await twitch.connect();
-    if (dbConnection && twitchConnection) {
+    if (twitchConnection) {
         console.log("ready to start listening!");
         twitch.startMessageWatcher(db);
     }
