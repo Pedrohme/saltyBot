@@ -1,5 +1,4 @@
 import { twitchChatHandler } from './handlers/twitchChatHandler';
-import dbHandler from './handlers/dbHandler';
 
 const tmiOptions = {
     connection: {
@@ -7,7 +6,6 @@ const tmiOptions = {
         reconnect: true
     },
     channels: ['saltybet'],
-    db: new dbHandler()
 };
 
 const twitch = new twitchChatHandler(tmiOptions);

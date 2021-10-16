@@ -11,7 +11,7 @@ export class twitchChatHandler {
         this.tmiClient = new tmi.Client(options);
         this.lastFighterA = "";
         this.lastFighterB = "";
-        this.db = options.db;
+        this.db = new dbHandler();
     }
     
     async connect() {

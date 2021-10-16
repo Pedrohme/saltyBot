@@ -1,6 +1,8 @@
 import got from "got";
 
 const apiBaseUrl = process.env.API_URL;
+const user = process.env.API_USER;
+const pass = process.env.API_PASS;
 
 export default class dbHandler {
     token:any;
@@ -12,8 +14,8 @@ export default class dbHandler {
         try {
             const res = await got.post(`${apiBaseUrl}login`,  {
                 json: {
-                    user: process.env.API_USER,
-                    password: process.env.API_PASS,
+                    user: user,
+                    password: pass,
                 },
                 responseType: 'json',
             });
