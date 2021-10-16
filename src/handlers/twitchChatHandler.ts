@@ -1,6 +1,5 @@
 import tmi from 'tmi.js';
-import pg from 'pg';
-import {dbHandler} from './dbHandler';
+import dbHandler = require('./dbHandler');
 
 export class twitchChatHandler {
     tmiClient:tmi.Client;
@@ -25,7 +24,7 @@ export class twitchChatHandler {
         }
     }
 
-    startMessageWatcher(dbHandler:dbHandler) {
+    startMessageWatcher() {
         console.log("Starting to listen!");
         this.tmiClient.on('message', async (channel, tags, message, self) => {
             if (tags.username === 'waifu4u') {
@@ -43,20 +42,24 @@ export class twitchChatHandler {
                     const valuesA = [this.lastFighterA];
                     const resA = await dbHandler.selectFighter(valuesA);
                     if (resA !== null) {
-                        const result:pg.QueryResult = (<pg.QueryResult>resA);
-                        if (result.rowCount === 0) {
+                        if (resA.statusCode === 204) {
                             const insertValues = [this.lastFighterA, 0 ,0];
                             await dbHandler.insertFighter(insertValues);
+                        }
+                        else if (resA.statusCode === 400) {
+                            console.log("Request error");
                         }
                     }
         
                     const valuesB = [this.lastFighterB];
                     const resB = await dbHandler.selectFighter(valuesB);
                     if (resB !== null) {
-                        const result:pg.QueryResult = (<pg.QueryResult>resB);
-                        if (result.rowCount === 0) {
+                        if (resB.statusCode === 204) {
                             const insertValues = [this.lastFighterB, 0 ,0];
                             await dbHandler.insertFighter(insertValues);
+                        }
+                        else if (resB.statusCode === 400) {
+                            console.log("Request error");
                         }
                     }
                 }
