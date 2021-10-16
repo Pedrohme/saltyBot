@@ -70,7 +70,7 @@ export class twitchChatHandler {
         const res = await this.db.selectFighter(values);
         if (res !== null) {
             if (res.statusCode === 204) {
-                const insertValues = [this.lastFighterA, 0 ,0];
+                const insertValues = [fighter, 0 ,0];
                 await this.db.insertFighter(insertValues);
                 return true;
             }
