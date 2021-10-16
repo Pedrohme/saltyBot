@@ -5,7 +5,7 @@ const tmiOptions = {
         secure: true,
         reconnect: true
     },
-    channels: ['saltybet']
+    channels: ['saltybet'],
 };
 
 const twitch = new twitchChatHandler(tmiOptions);

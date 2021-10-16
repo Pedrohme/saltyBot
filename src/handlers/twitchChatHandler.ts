@@ -1,15 +1,17 @@
 import tmi from 'tmi.js';
-import dbHandler = require('./dbHandler');
+import dbHandler from './dbHandler';
 
 export class twitchChatHandler {
     tmiClient:tmi.Client;
     lastFighterA:string;
     lastFighterB:string;
+    db:dbHandler;
 
     constructor (options:any) {
         this.tmiClient = new tmi.Client(options);
         this.lastFighterA = "";
         this.lastFighterB = "";
+        this.db = new dbHandler();
     }
     
     async connect() {
@@ -40,11 +42,11 @@ export class twitchChatHandler {
                     console.log(`fighter A = ${this.lastFighterA} fighter B = ${this.lastFighterB}`);
         
                     const valuesA = [this.lastFighterA];
-                    const resA = await dbHandler.selectFighter(valuesA);
+                    const resA = await this.db.selectFighter(valuesA);
                     if (resA !== null) {
                         if (resA.statusCode === 204) {
                             const insertValues = [this.lastFighterA, 0 ,0];
-                            await dbHandler.insertFighter(insertValues);
+                            await this.db.insertFighter(insertValues);
                         }
                         else if (resA.statusCode === 400) {
                             console.log("Request error");
@@ -52,11 +54,11 @@ export class twitchChatHandler {
                     }
         
                     const valuesB = [this.lastFighterB];
-                    const resB = await dbHandler.selectFighter(valuesB);
+                    const resB = await this.db.selectFighter(valuesB);
                     if (resB !== null) {
                         if (resB.statusCode === 204) {
                             const insertValues = [this.lastFighterB, 0 ,0];
-                            await dbHandler.insertFighter(insertValues);
+                            await this.db.insertFighter(insertValues);
                         }
                         else if (resB.statusCode === 400) {
                             console.log("Request error");
@@ -84,13 +86,13 @@ export class twitchChatHandler {
 
                         if (!flagError) {
                             const values = [this.lastFighterA, this.lastFighterB, winner];
-                            await dbHandler.insertFight(values);
+                            await this.db.insertFight(values);
         
                             const updateValuesWin = [1, 0, winner];
-                            await dbHandler.updateFighter(updateValuesWin);
+                            await this.db.updateFighter(updateValuesWin);
         
                             const updateValuesLoser = [0, 1, loser];
-                            await dbHandler.updateFighter(updateValuesLoser);
+                            await this.db.updateFighter(updateValuesLoser);
                         }
                     }
                 }
