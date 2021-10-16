@@ -27,7 +27,7 @@ export default class dbHandler {
                 }
             }
             catch (err) {
-                console.log((<Error>err).stack);    
+                console.log((<Error>err).stack);
                 this.token = "";
             }
         } catch (err) {
@@ -61,7 +61,7 @@ export default class dbHandler {
 
     async selectFighter(values:string[]) {
         try {
-            const res = await got.get(`${apiBaseUrl}fighter/${values[0]}`, {
+            const res = await got.get(`${apiBaseUrl}fighter/${encodeURIComponent(values[0])}`, {
                 responseType: 'json'
             });
             console.log("select fighter status code: ", res.statusCode);
