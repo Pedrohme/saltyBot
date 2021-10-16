@@ -1,5 +1,6 @@
 import got from "got";
-import {apiBaseUrl, userInfo} from "../config/config.json";
+
+const apiBaseUrl = process.env.API_URL;
 
 let token:any;
 
@@ -7,8 +8,8 @@ async function authenticate() {
     try {
         const res = await got.post(`${apiBaseUrl}login`,  {
             json: {
-                user: userInfo.name,
-                password: userInfo.password,
+                user: process.env.API_USER,
+                password: process.env.API_PASS,
             },
             responseType: 'json',
         });
