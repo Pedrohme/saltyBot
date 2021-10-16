@@ -10,7 +10,7 @@ export async function insertFighter(values:(string|number)[]) {
             },
             responseType: 'json'
         });
-        console.log("status code: ", res.statusCode);
+        console.log("inser fighter status code: ", res.statusCode);
         return res;
     } catch (err) {
         console.log((<Error>err).stack);
@@ -20,10 +20,11 @@ export async function insertFighter(values:(string|number)[]) {
 
 export async function selectFighter(values:string[]) {
     try {
-        const res = await got.get(`http://localhost:3000/api/fighter?name=${values[0]}`, {
+        const res = await got.get(`http://localhost:3000/api/fighter/${values[0]}`, {
             responseType: 'json'
         });
-        console.log("status code: ", res.statusCode);
+        console.log("select fighter status code: ", res.statusCode);
+        console.log(res.body);
         return res;
     } catch (err) {
         console.log((<Error>err).stack);
@@ -41,7 +42,7 @@ export async function insertFight(values:string[]) {
             },
             responseType: 'json'
         });
-        console.log("status code: ", res.statusCode);
+        console.log("insert fight status code: ", res.statusCode);
         return res;
     } catch (err) {
         console.log((<Error>err).stack);
@@ -59,7 +60,7 @@ export async function updateFighter(values:(number|string)[]) {
             },
             responseType: 'json'
         });
-        console.log("status code: ", res.statusCode);
+        console.log("update fighter status code: ", res.statusCode);
         return res;
     } catch (err) {
         console.log((<Error>err).stack);
