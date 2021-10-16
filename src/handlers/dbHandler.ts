@@ -10,7 +10,7 @@ export default class dbHandler {
         this.authenticate();
     }
     
-    async authenticate() {
+    private async authenticate() {
         try {
             const res = await got.post(`${apiBaseUrl}login`,  {
                 json: {
@@ -73,7 +73,7 @@ export default class dbHandler {
         }
     }
 
-    async  insertFight(values:string[]) {
+    async insertFight(values:string[]) {
         try {
             const res = await got.post(`${apiBaseUrl}fights`,  {
                 json: {
