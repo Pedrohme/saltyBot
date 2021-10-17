@@ -69,8 +69,8 @@ export class twitchChatHandler {
         const values = [fighter];
         const res = await this.db.selectFighter(values);
         if (res) {
-            console.log(res.body);
             if (res.statusCode === 204) {
+                console.log(`${fighter} not found, trying to insert in database...`);
                 const insertValues = [fighter, 0 ,0];
                 const inserted = await this.db.insertFighter(insertValues);
                 if (inserted) {
@@ -81,7 +81,6 @@ export class twitchChatHandler {
                 }
             }
             else {
-                console.log(res.statusCode);
                 console.log(res.body);
             }
         }
@@ -111,7 +110,7 @@ export class twitchChatHandler {
             console.log(`winner = ${winner} loser = ${loser}`);
         }
         else {
-            console.log('Fighter not found');
+            console.log(`Fight winner ${winner} not found on database`);
             flagError = true;
         }
         return {flagError: flagError, winner: winner, loser: loser};
