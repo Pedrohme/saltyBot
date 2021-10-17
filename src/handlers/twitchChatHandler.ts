@@ -68,18 +68,26 @@ export class twitchChatHandler {
     private async getAndInsertFighter(fighter:string) {
         const values = [fighter];
         const res = await this.db.selectFighter(values);
-        if (res !== null) {
+        if (res) {
+            console.log(res.body);
             if (res.statusCode === 204) {
                 const insertValues = [fighter, 0 ,0];
-                await this.db.insertFighter(insertValues);
-                return true;
+                const inserted = await this.db.insertFighter(insertValues);
+                if (inserted) {
+                    console.log(inserted.body);
+                }
+                else {
+                    console.log(`unknown error inserting ${fighter}`);
+                }
             }
-            else if (res.statusCode === 400) {
-                console.log("Request error");
-                return false;
+            else {
+                console.log(res.statusCode);
+                console.log(res.body);
             }
         }
-        return false;
+        else {
+            console.log("unknown error getting fighter");
+        }
     }
 
     //Process "wins!" message
@@ -111,12 +119,30 @@ export class twitchChatHandler {
 
     private async insertFightUpdateFighters(winner:string, loser:string) {
         const values = [this.lastFighterA, this.lastFighterB, winner];
-        await this.db.insertFight(values);
+        let res = await this.db.insertFight(values);
+        if (res) {
+            console.log(res.body);
+        }
+        else {
+            console.log("unknown error inserting fight");
+        }
 
         const updateValuesWin = [1, 0, winner];
-        await this.db.updateFighter(updateValuesWin);
+        res = await this.db.updateFighter(updateValuesWin);
+        if (res) {
+            console.log(res.body);
+        }
+        else {
+            console.log(`unknown error updating ${winner}`);
+        }
 
         const updateValuesLoser = [0, 1, loser];
-        await this.db.updateFighter(updateValuesLoser);
+        res = await this.db.updateFighter(updateValuesLoser);
+        if (res) {
+            console.log(res.body);
+        }
+        else {
+            console.log(`unknown error updating ${loser}`);
+        }
     }
 }
