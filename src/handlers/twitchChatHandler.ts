@@ -53,6 +53,7 @@ export class twitchChatHandler {
         await this.updateFighters(betsPos, message);
         await this.getAndInsertFighter(this.lastFighterA);
         await this.getAndInsertFighter(this.lastFighterB);
+        await this.db.updateIndexPage(this.lastFighterA, this.lastFighterB);
     }
 
     private async updateFighters(betsPos:number, message:string) {
@@ -110,7 +111,7 @@ export class twitchChatHandler {
             console.log(`winner = ${winner} loser = ${loser}`);
         }
         else {
-            console.log(`Fight winner ${winner} not found on database`);
+            console.log(`Fight winner ${winner} doesn't match`);
             flagError = true;
         }
         return {flagError: flagError, winner: winner, loser: loser};

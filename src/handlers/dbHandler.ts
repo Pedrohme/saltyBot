@@ -18,7 +18,7 @@ export default class dbHandler {
     
     private async authenticate() {
         try {
-            const res = await this.got.post(`login`,  {
+            const res = await this.got.post(`api/login`,  {
                 json: {
                     user: user,
                     password: pass,
@@ -49,7 +49,7 @@ export default class dbHandler {
 
     async insertFighter(values:(string|number)[]) {
         try {
-            const res = await this.got.post(`fighter`,  {
+            const res = await this.got.post(`api/fighter`,  {
                 json: {
                     name: values[0],
                     wins: 0,
@@ -76,7 +76,7 @@ export default class dbHandler {
 
     async selectFighter(values:string[]) {
         try {
-            const res = await this.got.get(`fighter/${encodeURIComponent(values[0])}`);
+            const res = await this.got.get(`api/fighter/${encodeURIComponent(values[0])}`);
             return res;
         } catch (err) {
             if (err instanceof _got.RequestError) {
@@ -93,7 +93,7 @@ export default class dbHandler {
 
     async insertFight(values:string[]) {
         try {
-            const res = await this.got.post(`fights`,  {
+            const res = await this.got.post(`api/fights`,  {
                 json: {
                     fightera: values[0],
                     fighterb: values[1],
@@ -120,7 +120,7 @@ export default class dbHandler {
 
     async updateFighter(values:(number|string)[]) {
         try {
-            const res = await this.got.put(`fighter`,  {
+            const res = await this.got.put(`api/fighter`,  {
                 json: {
                     wins: values[0],
                     losses: values[1],
@@ -130,6 +130,34 @@ export default class dbHandler {
                     "x-access-token" : this.token
                 }
             });
+            return res;
+        } catch (err) {
+            if (err instanceof _got.RequestError && err.response) {
+                if (err.response.statusCode === 401 || err.response.statusCode === 500) {
+                    await this.authenticate();
+                }
+                return err.response;
+            }
+            else if (err instanceof Error) {
+                console.log(err.stack);
+            }
+            return null;
+        }
+    }
+
+    async updateIndexPage(fightera:string, fighterb:string) {
+        console.log("chegouaqui");
+        try {
+            const res = await this.got.post('',  {
+                json: {
+                    fightera: fightera,
+                    fighterb: fighterb,
+                },
+                headers: {
+                    "x-access-token" : this.token
+                }
+            });
+            console.log(res.body);
             return res;
         } catch (err) {
             if (err instanceof _got.RequestError && err.response) {
