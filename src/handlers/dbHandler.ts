@@ -146,7 +146,6 @@ export default class dbHandler {
     }
 
     async updateIndexPage(fightera:string, fighterb:string) {
-        console.log("chegouaqui");
         try {
             const res = await this.got.post('',  {
                 json: {
