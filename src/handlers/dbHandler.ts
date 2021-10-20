@@ -20,7 +20,7 @@ export default class dbHandler {
         try {
             const res = await this.got.post(`api/login`,  {
                 json: {
-                    user: user,
+                    name: user,
                     password: pass,
                 },
             });
@@ -47,13 +47,12 @@ export default class dbHandler {
         return false;
     }
 
-    async insertFighter(values:(string|number)[]) {
+    async insertFighter(values:(string)[]) {
         try {
             const res = await this.got.post(`api/fighter`,  {
                 json: {
                     name: values[0],
-                    wins: 0,
-                    losses: 0
+                    tier: values[1],
                 },
                 headers: {
                     "x-access-token" : this.token
@@ -76,7 +75,7 @@ export default class dbHandler {
 
     async selectFighter(values:string[]) {
         try {
-            const res = await this.got.get(`api/fighter/${encodeURIComponent(values[0])}`);
+            const res = await this.got.get(`api/fighter/?name=${encodeURIComponent(values[0])}&tier=${values[1]}`);
             return res;
         } catch (err) {
             if (err instanceof _got.RequestError) {
@@ -95,9 +94,10 @@ export default class dbHandler {
         try {
             const res = await this.got.post(`api/fights`,  {
                 json: {
-                    fightera: values[0],
-                    fighterb: values[1],
-                    winner: values[2]
+                    tier: values[0],
+                    fightera: values[1],
+                    fighterb: values[2],
+                    winner: values[3]
                 },
                 headers: {
                     "x-access-token" : this.token
@@ -124,7 +124,8 @@ export default class dbHandler {
                 json: {
                     wins: values[0],
                     losses: values[1],
-                    name: values[2]
+                    name: values[2],
+                    tier: values[3]
                 },
                 headers: {
                     "x-access-token" : this.token
@@ -145,12 +146,13 @@ export default class dbHandler {
         }
     }
 
-    async updateIndexPage(fightera:string, fighterb:string) {
+    async updateIndexPage(fightera:string, fighterb:string, tier:string) {
         try {
             const res = await this.got.post('',  {
                 json: {
                     fightera: fightera,
                     fighterb: fighterb,
+                    tier: tier
                 },
                 headers: {
                     "x-access-token" : this.token
