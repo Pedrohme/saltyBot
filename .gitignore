@@ -121,3 +121,5 @@ dist/
 config.json
 .eslintrc.json
 localtest.sh
+
+.DS_Store

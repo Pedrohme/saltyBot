@@ -5,12 +5,14 @@ export class twitchChatHandler {
     tmiClient:tmi.Client;
     lastFighterA:string;
     lastFighterB:string;
+    lastTier:string;
     db:dbHandler;
 
     constructor (options:any) {
         this.tmiClient = new tmi.Client(options);
         this.lastFighterA = "";
         this.lastFighterB = "";
+        this.lastTier = "";
         this.db = new dbHandler();
     }
     
@@ -51,9 +53,9 @@ export class twitchChatHandler {
     //Process "Bets are OPEN" message
     private async betsAreOpen(betsPos:number, message:string) {
         await this.updateFighters(betsPos, message);
-        await this.getAndInsertFighter(this.lastFighterA);
-        await this.getAndInsertFighter(this.lastFighterB);
-        await this.db.updateIndexPage(this.lastFighterA, this.lastFighterB);
+        await this.getAndInsertFighter(this.lastFighterA, this.lastTier);
+        await this.getAndInsertFighter(this.lastFighterB, this.lastTier);
+        await this.db.updateIndexPage(this.lastFighterA, this.lastFighterB, this.lastTier);
     }
 
     private async updateFighters(betsPos:number, message:string) {
@@ -62,17 +64,18 @@ export class twitchChatHandler {
         const tierpos = sliced.search(/\(. Tier\)/);
         this.lastFighterA = sliced.slice(18, vspos-1);
         this.lastFighterB = sliced.slice(vspos+3, tierpos-2);
-        console.log(`fighter A = ${this.lastFighterA} fighter B = ${this.lastFighterB}`);
+        this.lastTier = sliced.charAt(tierpos+1);
+        console.log(`fighter A = |${this.lastFighterA}| fighter B = |${this.lastFighterB}| tier = ${this.lastTier}`);
         return [this.lastFighterA, this.lastFighterB];
     }
 
-    private async getAndInsertFighter(fighter:string) {
-        const values = [fighter];
+    private async getAndInsertFighter(fighter:string, tier:string) {
+        const values = [fighter, tier];
         const res = await this.db.selectFighter(values);
         if (res) {
             if (res.statusCode === 204) {
                 console.log(`${fighter} not found, trying to insert in database...`);
-                const insertValues = [fighter, 0 ,0];
+                const insertValues = [fighter, tier];
                 const inserted = await this.db.insertFighter(insertValues);
                 if (inserted) {
                     console.log(inserted.body);
@@ -118,7 +121,7 @@ export class twitchChatHandler {
     }
 
     private async insertFightUpdateFighters(winner:string, loser:string) {
-        const values = [this.lastFighterA, this.lastFighterB, winner];
+        const values = [this.lastTier, this.lastFighterA, this.lastFighterB, winner];
         let res = await this.db.insertFight(values);
         if (res) {
             console.log(res.body);
@@ -127,7 +130,7 @@ export class twitchChatHandler {
             console.log("unknown error inserting fight");
         }
 
-        const updateValuesWin = [1, 0, winner];
+        const updateValuesWin = [1, 0, winner, this.lastTier];
         res = await this.db.updateFighter(updateValuesWin);
         if (res) {
             console.log(res.body);
@@ -136,7 +139,7 @@ export class twitchChatHandler {
             console.log(`unknown error updating ${winner}`);
         }
 
-        const updateValuesLoser = [0, 1, loser];
+        const updateValuesLoser = [0, 1, loser, this.lastTier];
         res = await this.db.updateFighter(updateValuesLoser);
         if (res) {
             console.log(res.body);
